@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pipe-and-Filter Text Processing Pipeline</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Pipe-and-Filter Text Processing Pipeline</h1>
+        <p class="subtitle">
+            This web application demonstrates a pipe-and-filter architecture for text processing.
+            Input raw text and observe how it flows through tokenization, cleaning, transformation,
+            and analysis stages.
+        </p>
+    </header>
+
+    <section class="input-section">
+        <form method="post">
+            <label for="text">Input Text</label>
+            <textarea id="text" name="text" rows="5"
+                placeholder="Enter raw text to be processed through the pipeline..."></textarea>
+            <button type="submit">Run Pipeline</button>
+        </form>
+    </section>
+
+    {% if result %}
+
+    <!-- PIPELINE LOG -->
+    <section class="log-section">
+        <h2>Pipeline Execution Trace</h2>
+        <ul>
+            {% for log in result.pipeline_log %}
+                <li>{{ log }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- PIPELINE STAGES -->
+    <section class="pipeline-section">
+
+        <!-- TOKENIZE -->
+        <div class="stage">
+            <h3>1. Tokenize Stage Output</h3>
+            <p class="stage-desc">
+                Splits the input text into individual tokens and normalizes them.
+            </p>
+            <div class="token-list">
+                {% for token in result.tokenize_output %}
+                    <span class="token">{{ token }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- CLEAN -->
+        <div class="stage">
+            <h3>
+                2. Clean Stage Output
+                <button class="info-btn" onclick="toggleRemoved('clean-removed')">ⓘ</button>
+            </h3>
+
+            <p class="stage-desc">
+                Removes stop-words and punctuation to eliminate irrelevant tokens.
+            </p>
+
+            <div class="token-list">
+                {% for token in result.clean_output %}
+                    <span class="token clean">{{ token }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- REMOVED TOKENS -->
+            <div id="clean-removed" class="removed-box">
+                <strong>Removed Tokens:</strong>
+                <div class="removed-list">
+                    {% for token in result.tokenize_output %}
+                        {% if token not in result.clean_output %}
+                            <span class="removed-token">{{ token }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSFORM -->
+        <div class="stage">
+            <h3>
+                3. Transform Stage Output
+                <button class="info-btn" onclick="toggleRemoved('transform-removed')">ⓘ</button>
+            </h3>
+
+            <p class="stage-desc">
+                Applies lightweight transformations to prepare tokens for analysis.
+            </p>
+
+            <div class="token-list">
+                {% for token in result.transform_output %}
+                    <span class="token transform">{{ token }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- REMOVED TOKENS -->
+            <div id="transform-removed" class="removed-box">
+                <strong>Removed Tokens:</strong>
+                <div class="removed-list">
+                    {% for token in result.clean_output %}
+                        {% if token not in result.transform_output %}
+                            <span class="removed-token">{{ token }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYSIS -->
+        <div class="stage analysis">
+            <h3>4. Analysis Stage Results</h3>
+            <p class="stage-desc">
+                Computes statistical insights from the processed tokens.
+            </p>
+
+            <div class="analysis-cards">
+
+                <div class="analysis-card">
+                    <span class="label">Total Tokens</span>
+                    <span class="value">{{ result.analysis_output.total_tokens }}</span>
+                    <span class="card-desc">
+                        Total number of tokens after all processing stages.
+                    </span>
+                </div>
+
+                <div class="analysis-card">
+                    <span class="label">Unique Tokens</span>
+                    <span class="value">{{ result.analysis_output.unique_tokens }}</span>
+                    <span class="card-desc">
+                        Number of distinct tokens after processing.
+                    </span>
+                </div>
+
+                <div class="analysis-card">
+                    <span class="label">Avg. Token Length</span>
+                    <span class="value">{{ result.analysis_output.average_token_length }}</span>
+                    <span class="card-desc">
+                        Average length of tokens measured in characters.
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="analysis-section">
+                <h4>Most Frequent Tokens</h4>
+                <ul>
+                    {% for token, freq in result.analysis_output.top_tokens %}
+                        <li><strong>{{ token }}</strong> — {{ freq }} times</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="analysis-section">
+                <h4>Token Length Distribution</h4>
+                <table>
+                    <tr>
+                        <th>Length</th>
+                        <th>Count</th>
+                    </tr>
+                    {% for length, count in result.analysis_output.length_distribution.items() %}
+                    <tr>
+                        <td>{{ length }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+</div>
+
+<script>
+function toggleRemoved(id) {
+    const box = document.getElementById(id);
+    box.style.display = box.style.display === "block" ? "none" : "block";
+}
+</script>
+
+</body>
+</html>
