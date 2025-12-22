@@ -76,11 +76,12 @@ Results & Statistics
 
 ## 🛠️ Technologies Used
 
-- Python 3
-- Flask
-- HTML5 / CSS3
-- Jinja2
-- Collections (Counter)
+- **Python 3** – Core programming language
+- **Flask** – Web framework for handling requests and pipeline execution
+- **HTML5 / CSS3** – User interface and responsive layout
+- **Jinja2** – Template engine used to dynamically render pipeline outputs in HTML
+- **collections.Counter** – Used for token frequency analysis in the analysis stage
+
 
 ---
 
