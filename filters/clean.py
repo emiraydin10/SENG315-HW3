@@ -20,12 +20,17 @@ def clean(tokens):
     removed = []
 
     for token in tokens:
-        if token in STOP_WORDS:
-            removed.append((token, "stop-word"))
-        elif token in string.punctuation:
+        stripped = token.strip(string.punctuation)
+
+        if stripped == "":
             removed.append((token, "punctuation"))
-        else:
-            cleaned.append(token)
+            continue
+
+        if stripped.lower() in STOP_WORDS:
+            removed.append((token, "stop-word"))
+            continue
+
+        cleaned.append(stripped)
 
     return cleaned, removed
 

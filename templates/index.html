@@ -74,15 +74,21 @@
 
             <!-- REMOVED TOKENS -->
             <div id="clean-removed" class="removed-box">
-                <strong>Removed Tokens:</strong>
-                <div class="removed-list">
-                    {% for token in result.tokenize_output %}
-                        {% if token not in result.clean_output %}
-                            <span class="removed-token">{{ token }}</span>
-                        {% endif %}
+                <strong>Removed Tokens (Clean):</strong>
+
+                {% if result.removed_clean and result.removed_clean|length > 0 %}
+                    <ul class="removed-reason-list">
+                    {% for token, reason in result.removed_clean %}
+                        <li>
+                        <span class="removed-token">{{ token }}</span>
+                        <span class="reason">({{ reason }})</span>
+                        </li>
                     {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-note">No tokens removed in clean stage.</p>
+                {% endif %}
                 </div>
-            </div>
         </div>
 
         <!-- TRANSFORM -->
@@ -104,16 +110,22 @@
 
             <!-- REMOVED TOKENS -->
             <div id="transform-removed" class="removed-box">
-                <strong>Removed Tokens:</strong>
-                <div class="removed-list">
-                    {% for token in result.clean_output %}
-                        {% if token not in result.transform_output %}
-                            <span class="removed-token">{{ token }}</span>
-                        {% endif %}
+                <strong>Removed Tokens (Transform):</strong>
+
+                {% if result.removed_transform and result.removed_transform|length > 0 %}
+                    <ul class="removed-reason-list">
+                    {% for token, reason in result.removed_transform %}
+                        <li>
+                        <span class="removed-token">{{ token }}</span>
+                        <span class="reason">({{ reason }})</span>
+                        </li>
                     {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="empty-note">No tokens removed in transform stage.</p>
+                {% endif %}
                 </div>
-            </div>
-        </div>
+                        </div>
 
         <!-- ANALYSIS -->
         <div class="stage analysis">
